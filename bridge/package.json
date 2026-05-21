@@ -1,0 +1,11 @@
+{
+  "name": "ekstra-crypto-dash-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "serialport": "^13.0.0",
+    "ws": "^8.18.3"
+  }
+}
