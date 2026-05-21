@@ -200,6 +200,27 @@ h1 {
   gap: 0.5rem;
 }
 
+.coin-list-shell {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pinned-coin {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 4;
+  border-bottom: 0.0625rem solid var(--line);
+  background: var(--bg);
+  padding-bottom: 0.75rem;
+}
+
+.pinned-coin .coin-card {
+  border-left-color: var(--accent);
+  border-color: var(--border-active);
+  background: #0d111c;
+  box-shadow: 0 0 1.2rem var(--glow);
+}
+
 .coin-card {
   min-height: 5rem;
   border: 0.0625rem solid var(--line);
@@ -225,6 +246,16 @@ h1 {
 .coin-logo {
   width: 2rem;
   height: 2rem;
+}
+
+.coin-logo-fallback {
+  display: grid;
+  place-items: center;
+  border: 0.0625rem solid var(--border-active);
+  border-radius: 50%;
+  background: var(--glow);
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .coin-identity {

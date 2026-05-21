@@ -2,6 +2,22 @@ import { useEffect, useState } from 'react'
 import { APIS } from '../config.js'
 import { useGesture } from '../context/GestureContext.jsx'
 
+function normalizeEkstraPair(pair) {
+  const price = Number(pair?.priceUsd ?? 0)
+  const change = Number(pair?.priceChange?.h24 ?? 0)
+
+  return {
+    id: 'ekstra-xtra',
+    symbol: pair?.baseToken?.symbol ?? 'XTRA',
+    name: pair?.baseToken?.name ?? 'Ekstra AI',
+    image: pair?.info?.imageUrl ?? '',
+    current_price: price,
+    price_change_percentage_24h: change,
+    sparkline_in_7d: { price: [] },
+    pinned: true,
+  }
+}
+
 function normalizeCoinCap(asset) {
   const symbol = asset.symbol?.toLowerCase() ?? 'coin'
   const price = Number(asset.priceUsd ?? 0)
@@ -14,6 +30,22 @@ function normalizeCoinCap(asset) {
     current_price: price,
     price_change_percentage_24h: Number(asset.changePercent24Hr ?? 0),
     sparkline_in_7d: { price: [] },
+  }
+}
+
+async function fetchEkstraToken(signal) {
+  try {
+    const response = await fetch(APIS.ekstraPair, { signal })
+    if (!response.ok) return null
+
+    const json = await response.json()
+    const pair = json.pair ?? json.pairs?.[0]
+    if (!pair) return null
+
+    return normalizeEkstraPair(pair)
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    return null
   }
 }
 
@@ -54,7 +86,11 @@ export function useCryptoData() {
       try {
         setLoading(true)
         setError(null)
-        const data = await fetchCoins(controller.signal)
+        const [ekstraToken, marketCoins] = await Promise.all([
+          fetchEkstraToken(controller.signal),
+          fetchCoins(controller.signal),
+        ])
+        const data = ekstraToken ? [ekstraToken, ...marketCoins] : marketCoins
         setCoins((current) => {
           setPreviousPrices(
             Object.fromEntries(current.map((coin) => [coin.id, coin.current_price])),

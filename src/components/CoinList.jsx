@@ -10,10 +10,16 @@ export default function CoinList() {
     gestureState: { coinOrder, selectedIndex },
   } = useGesture()
 
+  const pinnedCoin = useMemo(() => coins.find((coin) => coin.pinned), [coins])
+
   const orderedCoins = useMemo(() => {
-    if (!coinOrder.length) return coins
+    const regular = coins.filter((coin) => !coin.pinned)
+    if (!coinOrder.length) return regular
+
     const byId = new Map(coins.map((coin) => [coin.id, coin]))
-    return coinOrder.map((id) => byId.get(id)).filter(Boolean)
+    return coinOrder
+      .map((id) => byId.get(id))
+      .filter((coin) => coin && !coin.pinned)
   }, [coins, coinOrder])
 
   useEffect(() => {
@@ -34,8 +40,27 @@ export default function CoinList() {
       {loading && <div className="data-state">Loading live market feed</div>}
       {error && <div className="data-state error">Market feeds offline: {error}</div>}
       {!loading && !error && (
-        <div className="coin-list">
-          {orderedCoins.map((coin, index) => {
+        <div className="coin-list-shell">
+          {pinnedCoin && (
+            <div className="pinned-coin">
+              <CoinCard
+                coin={pinnedCoin}
+                rank={0}
+                selected={false}
+                priceDirection={
+                  previousPrices[pinnedCoin.id] === undefined
+                    ? 'steady'
+                    : pinnedCoin.current_price > previousPrices[pinnedCoin.id]
+                      ? 'flash-up'
+                      : pinnedCoin.current_price < previousPrices[pinnedCoin.id]
+                        ? 'flash-down'
+                        : 'steady'
+                }
+              />
+            </div>
+          )}
+          <div className="coin-list">
+            {orderedCoins.map((coin, index) => {
             const previousPrice = previousPrices[coin.id]
             const priceDirection =
               previousPrice === undefined
@@ -61,7 +86,8 @@ export default function CoinList() {
                 />
               </div>
             )
-          })}
+            })}
+          </div>
         </div>
       )}
     </section>

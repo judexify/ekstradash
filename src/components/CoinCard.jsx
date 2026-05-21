@@ -22,8 +22,12 @@ function CoinCard({ coin, rank, selected, priceDirection }) {
 
   return (
     <article className={`coin-card ${selected ? 'selected' : ''}`}>
-      <div className="coin-rank">{String(rank).padStart(2, '0')}</div>
-      <img src={coin.image} alt="" className="coin-logo" />
+      <div className="coin-rank">{coin.pinned ? 'PIN' : String(rank).padStart(2, '0')}</div>
+      {coin.image ? (
+        <img src={coin.image} alt="" className="coin-logo" />
+      ) : (
+        <div className="coin-logo coin-logo-fallback">{coin.symbol.slice(0, 1).toUpperCase()}</div>
+      )}
       <div className="coin-identity">
         <strong>{coin.symbol.toUpperCase()}</strong>
         <span>{coin.name}</span>

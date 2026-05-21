@@ -1,6 +1,6 @@
 # EkstraDash
 
-EkstraDash is a gesture-controlled crypto price dashboard powered by a physical Arduino and MPU-6050 sensor through the Ekstra motion network. It combines live crypto market data, Fear & Greed mood styling, local WebSocket controls, and an Ekstra prototype phone-IMU ingest path for hardware-originated motion samples.
+EkstraDash is a gesture-controlled crypto price dashboard powered by a physical Arduino and MPU-6050 sensor through the Ekstra motion network. It combines live crypto market data, a pinned Ekstra/XTRA Dexscreener row, Fear & Greed mood styling, local WebSocket controls, and an Ekstra prototype phone-IMU ingest path for hardware-originated motion samples.
 
 ## Wiring
 
@@ -56,6 +56,8 @@ No secrets are committed. `bridge/keypair.json` is generated once and ignored.
 npm install
 npm run dev
 ```
+
+The Ekstra/XTRA row is pinned above Bitcoin using the Dexscreener pair configured in `src/config.js`.
 
 ## Run Bridge
 
